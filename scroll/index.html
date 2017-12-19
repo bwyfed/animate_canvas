@@ -55,7 +55,7 @@
                 return;
             }
             var children = this.container.children;
-            this.childLen = children.length;  //滚动条目数
+            this.childLen = children.length;  //滚动真实条目数
             if(this.childLen===0) {
                 console.log('contains no items');
                 return;
@@ -70,6 +70,12 @@
             this.timer1 = null; //一次动画所用的定时器
 
             this._timeFrame = Math.round(this.duration / this.itemOffset);  //每一帧变化的时间间隔，取整
+            //根据运动方向，复制相应的节点
+            if(this.direction === 'up' || this.direction === 'left') {
+                this.container.appendChild(children[0].cloneNode(true));
+            } else if(this.direction === 'down' || this.direction === 'right') {
+                this.container.insertBefore(children[this.childLen-1].cloneNode(true),children[0]);
+            }
             this._speed = -1;  //每次移动多少像素（和方向）
             this._attrs = ['offsetTop','top','offsetHeight'];    //动画改编的DOM属性: 当前的偏移值，设置的内联样式值
             if(this.direction === 'down' || this.direction === 'right') {
@@ -105,6 +111,10 @@
                     _this.container.style[_this._attrs[1]] = _this.container[_this._attrs[0]] + _this._speed + 'px';
                 }
             },_this._timeFrame);
+            return this;
+        };
+        LoopScroll.prototype.move = function () {
+
         };
 
         window.LoopScroll = LoopScroll;
