@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>循环滚动</title>
+    <style>
+        html,body {
+            margin: 0; padding:0;
+        }
+        #ad-container,#ad-container2 {
+            position: relative;
+            height: 32px;
+            margin: 10px;
+            clear: both;
+            overflow: hidden;
+            background-color: burlywood;
+        }
+        #ad-container #ad-scroll,#ad-container2 #ad-scroll2 {
+            position: absolute;
+            margin: 0;
+            list-style: none;
+        }
+        #ad-container #ad-scroll li,#ad-container2 #ad-scroll2 li {
+            line-height: 32px;
+        }
+    </style>
+</head>
+<body>
+<div id="ad-container">
+    <ul id="ad-scroll">
+        <li>1111111</li>
+        <li>2222222</li>
+        <li>3333333</li>
+        <li>4444444</li>
+        <li>5555555</li>
+    </ul>
+</div>
+<div id="ad-container2">
+    <ul id="ad-scroll2">
+        <li>1111111</li>
+        <li>2222222</li>
+        <li>3333333</li>
+        <li>4444444</li>
+        <li>5555555</li>
+    </ul>
+</div>
+<button id="up">向上滚动</button>
+<button id="down">向下滚动</button>
+<script>
+    (function(){
+        function LoopScroll(options) {
+            this.container = options.container || document.getElementById('ad-scroll');
+            if(!this.container) {
+                console.log('container must be specified');
+                return;
+            }
+            var children = this.container.children;
+            this.childLen = children.length;  //滚动条目数
+            if(this.childLen===0) {
+                console.log('contains no items');
+                return;
+            }
+            this.cloneFlag = false; //是否克隆了节点
+            this.direction = options.direction || 'up';  //滚动的方向 up down left right
+            this.duration = this.duration || 800;    //每次动画持续的时间（毫秒）
+            this.itemOffset = children[0].offsetHeight||this.container.parentNode.offsetHeight || 0;   //每个条目的偏移量
+            if(this.direction === 'left' || this.direction === 'right') {
+                this.itemOffset = children[0].offsetWidth||this.container.parentNode.offsetWidth || 0;
+            }
+            this.timer1 = null; //一次动画所用的定时器
+
+            this._timeFrame = Math.round(this.duration / this.itemOffset);  //每一帧变化的时间间隔，取整
+            this._speed = -1;  //每次移动多少像素（和方向）
+            this._attrs = ['offsetTop','top','offsetHeight'];    //动画改编的DOM属性: 当前的偏移值，设置的内联样式值
+            if(this.direction === 'down' || this.direction === 'right') {
+                this._speed = 1;
+            }
+            if(this.direction === 'left' || this.direction === 'right') {
+                this._attrs = ['offsetLeft', 'left', 'offsetWidth'];
+            }
+            if(this.direction === 'down') {
+                //如果向下滚动，则要给容器元素整体向上移动到容器高度，使得最后一个元素显示出来
+                this.container.style[this._attrs[1]] = -(this.container[this._attrs[2]]-this.itemOffset) + 'px';
+            }
+            this._initOffset = this.container[this._attrs[0]];
+        }
+        LoopScroll.prototype.moveStep = function(iStep, cb) {
+            var _this = this;
+            clearInterval(_this.timer1);
+            var iTarget = 0, addDirection = 'sub';
+            if(_this.direction === 'down' || _this.direction === 'right') {
+                addDirection = 'add';
+            }
+            _this.timer1 = setInterval(function(){
+                var currentOffset = _this.container[_this._attrs[0]];
+                if(_this.direction === 'up' || _this.direction === 'left') {
+                    iTarget = - (iStep * _this.itemOffset);
+                } else if(_this.direction === 'down' || _this.direction === 'right') {
+                    iTarget = _this._initOffset + (iStep * _this.itemOffset);
+                }
+                if((addDirection==='sub'&&currentOffset < iTarget)||(addDirection==='add'&&currentOffset > iTarget)) {
+                    clearInterval(_this.timer1);
+                    cb && cb();
+                } else {
+                    _this.container.style[_this._attrs[1]] = _this.container[_this._attrs[0]] + _this._speed + 'px';
+                }
+            },_this._timeFrame);
+        };
+
+        window.LoopScroll = LoopScroll;
+    })();
+    //===================================
+    var slider = new LoopScroll({
+        container: document.getElementById('ad-scroll'),
+        direction: 'up',
+        duration: 1000
+    });
+    var i = 0;
+    var upbtn = document.getElementById('up');
+    upbtn.addEventListener('click',function() {
+        i++;
+        slider.moveStep(i, function(){
+            console.log('move one up step');
+        })
+    });
+    //============================================
+    var slider2 = new LoopScroll({
+        container: document.getElementById('ad-scroll2'),
+        direction: 'down',
+        duration: 1000
+    });
+    var j = 0;
+    var downbtn = document.getElementById('down');
+    downbtn.addEventListener('click',function() {
+        j++;
+        slider2.moveStep(j, function(){
+            console.log('move one down step');
+        })
+    });
+</script>
+</body>
+</html>
