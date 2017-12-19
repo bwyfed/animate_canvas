@@ -89,6 +89,7 @@
                 this.container.style[this._attrs[1]] = -(this.container[this._attrs[2]]-this.itemOffset) + 'px';
             }
             this._initOffset = this.container[this._attrs[0]];
+            this.container.index = 0;   //记录当前条目的逻辑索引，向下（右）时，也不影响
         }
         LoopScroll.prototype.moveStep = function(iStep, cb) {
             var _this = this;
@@ -114,7 +115,37 @@
             return this;
         };
         LoopScroll.prototype.move = function () {
-
+            var _this = this;
+            var callback = new Function();
+            if(_this.direction === 'up' || _this.direction === 'left') {
+                _this.container.index++;
+                if(_this.container.index < _this.childLen) {
+                    callback = function() {
+                        console.log('move one up step=====');
+                    }
+                } else {
+                    callback = function() {
+                        console.log('move one up step*****');
+                        _this.container.index = 0;
+                        _this.container.style[_this._attrs[1]] = _this._initOffset + 'px';
+                    }
+                }
+            } else if(_this.direction === 'down' || _this.direction === 'right') {
+                this.container.index++;
+                if(this.container.index < this.childLen) {
+                    callback = function () {
+                        console.log('move one down step=====');
+                    };
+                } else {
+                    callback = function() {
+                        console.log('move one up step*****');
+                        _this.container.index = 0;
+                        _this.container.style[_this._attrs[1]] = _this._initOffset + 'px';
+                    }
+                }
+            }
+            _this.moveStep(_this.container.index,callback);
+            return _this;
         };
 
         window.LoopScroll = LoopScroll;
@@ -129,9 +160,10 @@
     var upbtn = document.getElementById('up');
     upbtn.addEventListener('click',function() {
         i++;
-        slider.moveStep(i, function(){
-            console.log('move one up step');
-        })
+//        slider.moveStep(i, function(){
+//            console.log('move one up step');
+//        })
+        slider.move();
     });
     //============================================
     var slider2 = new LoopScroll({
@@ -143,9 +175,10 @@
     var downbtn = document.getElementById('down');
     downbtn.addEventListener('click',function() {
         j++;
-        slider2.moveStep(j, function(){
-            console.log('move one down step');
-        })
+//        slider2.moveStep(j, function(){
+//            console.log('move one down step');
+//        })
+        slider2.move();
     });
 </script>
 </body>
