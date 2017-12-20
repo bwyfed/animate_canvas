@@ -60,7 +60,7 @@
                 console.log('contains no items');
                 return;
             }
-            this.cloneFlag = false; //是否克隆了节点
+            this.auto = options.auto || true; //是否自动播放
             this.direction = options.direction || 'up';  //滚动的方向 up down left right
             this.duration = options.duration || 800;    //每次动画持续的时间（毫秒）
             this.interval = options.interval || 1500;   //动画之间间隔时间
@@ -92,6 +92,7 @@
             }
             this._initOffset = this.container[this._attrs[0]];
             this.container.index = 0;   //记录当前条目的逻辑索引，向下（右）时，也不影响
+            this._callback = new Function();
         }
         LoopScroll.prototype.moveStep = function(iStep, cb) {
             var _this = this;
@@ -124,7 +125,7 @@
                 callback = function() {
                     console.log('one animate over=====');
                     clearTimeout(_this.timer2); _this.timer2 = null;
-                    _this.timer2 = setTimeout(_this.move,_this.interval);
+                    _this.timer2 = setTimeout(_this.move.bind(_this),_this.interval);
                 }
             } else {
                 callback = function() {
@@ -138,6 +139,10 @@
             _this.moveStep(_this.container.index,callback);
             return _this;
         };
+        LoopScroll.prototype.start = function() {
+            var _this = this;
+            setTimeout(_this.move.bind(_this),_this.interval);
+        };
 
         window.LoopScroll = LoopScroll;
     })();
@@ -146,7 +151,7 @@
         container: document.getElementById('ad-scroll'),
         direction: 'up',
         duration: 1000,
-        interval: 2000,
+        interval: 2000
     });
     var i = 0;
     var upbtn = document.getElementById('up');
@@ -155,7 +160,7 @@
 //        slider.moveStep(i, function(){
 //            console.log('move one up step');
 //        })
-        slider.move();
+        slider.start();
     });
     //============================================
     var slider2 = new LoopScroll({
@@ -171,7 +176,7 @@
 //        slider2.moveStep(j, function(){
 //            console.log('move one down step');
 //        })
-        slider2.move();
+        slider2.start();
     });
 </script>
 </body>
