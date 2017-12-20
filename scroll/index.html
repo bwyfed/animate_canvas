@@ -73,10 +73,12 @@
 
             this._timeFrame = Math.round(this.duration / this.itemOffset);  //每一帧变化的时间间隔，取整
             //根据运动方向，复制相应的节点
-            if(this.direction === 'up' || this.direction === 'left') {
-                this.container.appendChild(children[0].cloneNode(true));
-            } else if(this.direction === 'down' || this.direction === 'right') {
-                this.container.insertBefore(children[this.childLen-1].cloneNode(true),children[0]);
+            if(this.childLen>1) { //一条数据就不滚动了
+                if(this.direction === 'up' || this.direction === 'left') {
+                    this.container.appendChild(children[0].cloneNode(true));
+                } else if(this.direction === 'down' || this.direction === 'right') {
+                    this.container.insertBefore(children[this.childLen-1].cloneNode(true),children[0]);
+                }
             }
             this._speed = -1;  //每次移动多少像素（和方向）
             this._attrs = ['offsetTop','top','offsetHeight'];    //动画改编的DOM属性: 当前的偏移值，设置的内联样式值
@@ -108,7 +110,7 @@
                 } else if(_this.direction === 'down' || _this.direction === 'right') {
                     iTarget = _this._initOffset + (iStep * _this.itemOffset);
                 }
-                if((addDirection==='sub'&&currentOffset < iTarget)||(addDirection==='add'&&currentOffset > iTarget)) {
+                if((addDirection==='sub'&&currentOffset <= iTarget)||(addDirection==='add'&&currentOffset >= iTarget)) {
                     clearInterval(_this.timer1);
                     cb && cb();
                 } else {
@@ -141,6 +143,7 @@
         };
         LoopScroll.prototype.start = function() {
             var _this = this;
+            if(_this.childLen===1) return;  //一条数据就不再滚动了
             setTimeout(_this.move.bind(_this),_this.interval);
         };
 
