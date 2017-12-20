@@ -62,12 +62,14 @@
             }
             this.cloneFlag = false; //是否克隆了节点
             this.direction = options.direction || 'up';  //滚动的方向 up down left right
-            this.duration = this.duration || 800;    //每次动画持续的时间（毫秒）
+            this.duration = options.duration || 800;    //每次动画持续的时间（毫秒）
+            this.interval = options.interval || 1500;   //动画之间间隔时间
             this.itemOffset = children[0].offsetHeight||this.container.parentNode.offsetHeight || 0;   //每个条目的偏移量
             if(this.direction === 'left' || this.direction === 'right') {
                 this.itemOffset = children[0].offsetWidth||this.container.parentNode.offsetWidth || 0;
             }
             this.timer1 = null; //一次动画所用的定时器
+            this.timer2 = null; //动画之间的间隔定时器
 
             this._timeFrame = Math.round(this.duration / this.itemOffset);  //每一帧变化的时间间隔，取整
             //根据运动方向，复制相应的节点
@@ -117,31 +119,20 @@
         LoopScroll.prototype.move = function () {
             var _this = this;
             var callback = new Function();
-            if(_this.direction === 'up' || _this.direction === 'left') {
-                _this.container.index++;
-                if(_this.container.index < _this.childLen) {
-                    callback = function() {
-                        console.log('move one up step=====');
-                    }
-                } else {
-                    callback = function() {
-                        console.log('move one up step*****');
-                        _this.container.index = 0;
-                        _this.container.style[_this._attrs[1]] = _this._initOffset + 'px';
-                    }
+            _this.container.index++;
+            if(_this.container.index < _this.childLen) {
+                callback = function() {
+                    console.log('one animate over=====');
+                    clearTimeout(_this.timer2); _this.timer2 = null;
+                    _this.timer2 = setTimeout(_this.move,_this.interval);
                 }
-            } else if(_this.direction === 'down' || _this.direction === 'right') {
-                this.container.index++;
-                if(this.container.index < this.childLen) {
-                    callback = function () {
-                        console.log('move one down step=====');
-                    };
-                } else {
-                    callback = function() {
-                        console.log('move one up step*****');
-                        _this.container.index = 0;
-                        _this.container.style[_this._attrs[1]] = _this._initOffset + 'px';
-                    }
+            } else {
+                callback = function() {
+                    console.log('reset i=0*****');
+                    _this.container.index = 0;
+                    _this.container.style[_this._attrs[1]] = _this._initOffset + 'px';
+                    clearTimeout(_this.timer2); _this.timer2 = null;
+                    _this.timer2 = setTimeout(_this.move.bind(_this),_this.interval);
                 }
             }
             _this.moveStep(_this.container.index,callback);
@@ -154,7 +145,8 @@
     var slider = new LoopScroll({
         container: document.getElementById('ad-scroll'),
         direction: 'up',
-        duration: 1000
+        duration: 1000,
+        interval: 2000,
     });
     var i = 0;
     var upbtn = document.getElementById('up');
@@ -169,7 +161,8 @@
     var slider2 = new LoopScroll({
         container: document.getElementById('ad-scroll2'),
         direction: 'down',
-        duration: 1000
+        duration: 1000,
+        interval: 1500
     });
     var j = 0;
     var downbtn = document.getElementById('down');
