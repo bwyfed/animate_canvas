@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF- 8">
+    <title>Canvas动画</title>
+    <style>
+        *{ margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="700" height="550"> 浏览器 不支持 canvas </canvas>
+    <script>
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+      let left = 0;
+      let timer = setInterval(function() {
+        // 不断 清空 画布
+        ctx.clearRect( 0, 0, 700, 550);
+        ctx.beginPath();
+        //将颜色块填充为红色
+        ctx.fillStyle = "#f00";
+        //持续在新的位置上绘制矩形
+        ctx.fillRect(left, 0, 100, 100);
+        ctx.stroke();
+        if (left > 700) {
+          clearInterval(timer);
+        }
+        left += 1;
+      }, 16);
+    </script>
+</body>
+</html>
+

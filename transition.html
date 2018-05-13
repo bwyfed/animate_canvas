@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动画移动</title>
+    <style>
+        * {margin:0;padding:0;}
+        div{
+            width:200px;
+            height:200px;
+            margin-left:0;
+            background-color:red;
+            transition:all 3s ease-in-out 0s;
+        }
+        .right{
+            margin-left:400px;
+            background-color:blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+    <script>
+      let timer = setTimeout(function() {
+        let element = document.getElementById('box');
+          // 改变元素的样式
+        element.setAttribute('class', 'right');
+       }, 500);
+    </script>
+</body>
+</html>
+
+
