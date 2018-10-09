@@ -1,0 +1,81 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Canvas画图基础</title>
+  <style>
+    canvas {
+      background-color: #000000;
+    }
+    #canvas2 {
+      width: 400px;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Canvas画图基础</h3>
+  <p>使用 Canvas 画一个点,就相当于画一个半径为 1 的圆</p>
+  <canvas id="canvas1"></canvas>
+  <script>
+    const canvas1 = document.getElementById('canvas1')
+    const context1 = canvas1.getContext('2d')
+    canvas1.width = 400
+    canvas1.height = 400
+
+    context1.beginPath() // 起始一条路径，或重置当前路径
+    context1.arc(100, 100, 1, 0, Math.PI * 2, true) // 创建弧/曲线
+    context1.closePath() // 创建从当前点回到起始点的路径
+    context1.fillStyle = 'rgb(255, 255, 255)' // 设置或返回用于填充绘画的颜色、渐变或模式
+    context1.fill() // 填充当前绘图（路径）
+  </script>
+  <p>画一个顺时针的四分之一圆</p>
+  <canvas id="canvas2"></canvas>
+  <script>
+      const canvas2 = document.getElementById('canvas2')
+      const context2 = canvas2.getContext('2d')
+      canvas2.width = 400
+      canvas2.height = 400
+  
+      context2.beginPath()
+      context2.arc(100, 100, 50, 0, Math.PI * 0.5, false)
+      // 只设置了 beginPath 并没有设置 closePath，所以这就不是一条闭合的路径
+      // context2.closePath()
+      context2.strokeStyle = 'white'
+      context2.stroke()
+    </script>
+    <p>绘制直线</p>
+    <canvas id="canvas3"></canvas>
+    <script>
+      const canvas3 = document.getElementById('canvas3')
+      const context3 = canvas3.getContext('2d')
+      canvas3.width = 400
+      canvas3.height = 400
+      // 画一条直线
+      context3.beginPath()
+      context3.moveTo(50, 50)
+      context3.lineTo(100, 100)
+      context3.strokeStyle = '#fff'
+      context3.stroke()
+      context3.closePath()
+      // 画折线
+      context3.beginPath()
+      context3.lineTo(200, 200)
+      context3.lineTo(200, 100)
+      context3.lineTo(100, 50)
+      context3.strokeStyle = '#fff'
+      context3.stroke()
+
+      // 给绘制的直线添加样式
+      // 绘制了一条由点 (10,10) 到点 (100,100) 的直线，然后将其宽度设置为 10，并且加上“圆角”的效果。
+      context3.beginPath()
+      context3.moveTo(10, 10)
+      context3.lineTo(100, 100) 
+      context3.lineWidth = 10 // 设置线条宽度
+      context3.lineCap = 'round' // 设置线条的结束端点样式
+      context3.strokeStyle = '#fff'
+      context3.stroke()
+    </script>
+</body>
+</html>
