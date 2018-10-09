@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Canvas</title>
+  <style>
+    canvas {
+      background-color: #000000;
+    }
+    #canvas2 {
+      width: 400px;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <p>HTML 属性设置 width(400)、height(400)</p>
+  <canvas id="canvas1" width="400" height="400"></canvas>
+  <script>
+    const canvas1 = document.getElementById('canvas1')
+    const context1 = canvas1.getContext('2d')
+
+    context1.beginPath()
+    context1.arc(100, 100, 50, 0, Math.PI * 2, true)
+    context1.closePath()
+    context1.fillStyle = 'rgb(255, 255, 255)'
+    context1.fill()
+  </script>
+  <p>CSS 属性设置 width(400px)、height(400px)</p>
+  <canvas id="canvas2"></canvas>
+  <script>
+      const canvas2 = document.getElementById('canvas2')
+      const context2 = canvas2.getContext('2d')
+  
+      context2.beginPath()
+      context2.arc(100, 100, 50, 0, Math.PI * 2, true)
+      context2.closePath()
+      context2.fillStyle = 'rgb(255, 255, 255)'
+      context2.fill()
+    </script>
+    <p>JS 属性设置 width(400px)、height(400px)</p>
+    <canvas id="canvas3"></canvas>
+    <script>
+      const canvas3 = document.getElementById('canvas3')
+      const context3 = canvas3.getContext('2d')
+      canvas3.width = 400
+      canvas3.height = 400
+  
+      context3.beginPath()
+      context3.arc(100, 100, 50, 0, Math.PI * 2, true)
+      context3.closePath()
+      context3.fillStyle = 'rgb(255, 255, 255)'
+      context3.fill()
+    </script>
+</body>
+</html>
