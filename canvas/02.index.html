@@ -77,5 +77,18 @@
       context3.strokeStyle = '#fff'
       context3.stroke()
     </script>
+    <p>绘制矩形</p>
+    <canvas id="canvas4"></canvas>
+    <script>
+      const canvas4 = document.getElementById('canvas4')
+      const context4 = canvas4.getContext('2d')
+      canvas4.width = 400
+      canvas4.height = 400
+
+      context4.fillStyle = '#fff'
+      context4.fillRect(10, 10, 100, 100)
+      context4.strokeStyle = '#fff'
+      context4.strokeRect(130, 10, 100, 100)
+    </script>
 </body>
 </html>
