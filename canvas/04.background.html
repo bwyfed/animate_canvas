@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>酷炫背景</title>
+  <style>
+    html, body {
+      margin: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      cursor: none;
+      background-color: black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas')
+    const content = canvas.getContext('2d')
+    const WIDTH = document.documentElement.clientWidth || document.body.clientWidth
+    const HEIGHT = document.documentElement.clientHeight || document.body.clientHeight
+    const initRoundPopulation = 80
+    const round = []
+    console.log(WIDTH, HEIGHT)
+    canvas.width = WIDTH
+    canvas.height = HEIGHT
+
+
+    class RoundItem {
+      constructor(index, x, y) {
+        this.index = index
+        this.x = x
+        this.y = y
+        this.r = Math.random() * 2 + 1; // [1, 3)
+        const alpha = (Math.floor(Math.random() * 10) + 1) / 10 / 2 // 0.05, 0.1, 0.15, ..., 0.5
+        this.color = 'rgba(255, 255, 255,' + alpha + ')'
+      }
+
+      draw() {
+        content.fillStyle = this.color
+        content.shadowBlur = this.r * 2
+        content.beginPath()
+        content.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false)
+        content.closePath()
+        content.fill()
+      }
+    }
+
+    function init() {
+      for(let i = 0; i < initRoundPopulation; i++) {
+        round[i] = new RoundItem(i, Math.random() * WIDTH, Math.random() * HEIGHT)
+        round[i].draw()
+      }
+    }
+    init()
+  </script>
+</body>
+</html>
