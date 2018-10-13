@@ -48,6 +48,23 @@
         content.closePath()
         content.fill()
       }
+
+      move() {
+        this.y -= 0.15
+        if (this.y <= -10) {
+          this.y = HEIGHT + 10
+        }
+        this.draw()
+      }
+    }
+
+    function animate() {
+      content.clearRect(0, 0, WIDTH, HEIGHT)
+
+      for(let i = 0; i < round.length; i++) {
+        round[i].move()
+      }
+      requestAnimationFrame(animate)
     }
 
     function init() {
@@ -55,6 +72,7 @@
         round[i] = new RoundItem(i, Math.random() * WIDTH, Math.random() * HEIGHT)
         round[i].draw()
       }
+      animate()
     }
     init()
   </script>
